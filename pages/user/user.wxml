@@ -1,0 +1,56 @@
+<!--user.wxml-->
+<view class="banner"> 
+  <image src="/images/user_banner.png"> </image>
+  <view class="user_top">
+    <view class="user_img">
+          <open-data type="userAvatarUrl"></open-data>
+    </view>
+    <view class="member_name">会员名</view>
+    <view class="member_phone">13302144444</view>
+  </view>
+</view>
+<view id="user" class="flexRowBetween">
+  <view class="user_item" style="background:#f2f9ff;"  bindtap="intoPath" data-path="/pages/userOrder/userOrder">
+    <view style="height:140rpx;line-height:140rpx;"><image src="/images/user1.png"></image></view>
+    <view class="user_txt">我的订单</view>
+  </view>
+  <view class="user_item" style="background:#f2fff5;"   bindtap="intoPath" data-path="/pages/userAdressCom/userAdressCom">
+    <view style="height:140rpx;line-height:140rpx;"><image src="/images/user2.png"></image></view>
+    <view class="user_txt">收货地址</view>
+  </view>
+  <view class="user_item" style="background:#f2fff5;" bindtap="intoPath" data-path="/pages/dealers/dealers">
+    <view style="height:140rpx;line-height:140rpx;"><image src="/images/user3.png"></image></view>
+    <view class="user_txt">经销商入口</view>
+  </view>
+  <view class="user_item" style="background:#f2f9ff;"  bindtap="intoPath" data-path="/pages/userAgent/userAgent">
+    <view style="height:140rpx;line-height:140rpx;"><image src="/images/user4.png"></image></view>
+    <view class="user_txt">代理入口</view>
+  </view>
+</view>
+<view class="solely" style="font-size:20rpx;color:#666;text-align:center;">
+  技术支持:西安纯粹科技有限公司
+</view>
+<view style="height:120rpx;width:100%;">
+</view>
+<view class="navbar">
+    
+    <view class="navbar_item"   bindtap="intoPath" data-path="/pages/index/index">
+        <view class="nav_img">
+          <image src="/images/navbar1.png" style="width:50rpx;height:48rpx;"></image>
+        </view>
+        <view class="text" style="{{fonts[2].font}}">首页</view>
+    </view>
+    <view class="navbar_item"   bindtap="intoPath" data-path="/pages/buy/buy">
+        <view class="nav_img">
+           <image src="/images/navbar2.png" style="width:50rpx;height:48rpx;"></image>
+        </view>
+        <view class="text" style="{{fonts[2].font}}">购买</view>
+    </view>
+    <view class="navbar_item"   bindtap="intoPath" data-path="/pages/user/user">
+        <view class="nav_img">
+            <image src="/images/navbar3-a.png" style="width:50rpx;height:48rpx;"></image>
+        </view>
+        <view class="text this-text" style="{{fonts[2].font}}">我的</view>
+    </view>
+</view>
+

@@ -1,0 +1,57 @@
+<!--userOrder.wxml-->
+<view class="order_sort" style="{{fonts[5].font}}">
+  <view class="order_click" data-num="1"  bindtap="menuClick" >
+      <view class="sort_txt"  style="{{num==1?'color:#00c6f7;border-bottom:solid 2px #00c6f7':'border-bottom:solid 2px #fff'}}">待提货</view>
+  </view>
+   <view class="order_click" data-num="2"  bindtap="menuClick" style="{{num==2?'color:#00c6f7':''}}">
+      
+      <view class="sort_txt"  style="{{num==2?'color:#00c6f7;border-bottom:solid 2px #00c6f7':'border-bottom:solid 2px #fff'}}">待发货</view>
+  </view>
+  <view class="order_click" data-num="3"  bindtap="menuClick" style="{{num==3?'color:#00c6f7':''}}">
+      <view class="sort_txt"  style="{{num==3?'color:#00c6f7;border-bottom:solid 2px #00c6f7':'border-bottom:solid 2px #fff'}}">待收货</view>
+  </view>
+  <view class="order_click" data-num="4"  bindtap="menuClick" style="{{num==4?'color:#00c6f7':''}}">
+      <view class="sort_txt"  style="{{num==4?'color:#00c6f7;border-bottom:solid 2px #00c6f7':'border-bottom:solid 2px #fff'}}">已完成</view>
+  </view>
+</view>
+<view id="order">
+  <block wx:for="{{web_mainData}}" wx:key="id">
+    <view class="order_list">
+      <view class="order_infor">
+        <view class="order_item">
+          <view class="order_left">
+            <image src="{{item.products[0].snap_product.mainImg[0].url}}"></image>
+          </view>
+          <view class="order_right">
+            <view class="orderProname" style="{{fonts[3].font}}">
+             交易编号:{{item.products[0].snap_product.title}}
+            </view>
+            <view class="orderProname">卡号:1155113312</view>
+            <view class="order_attr" >
+              <view class="order_credit">
+                <text style="{{fonts[4].font}};color:#e62c2c;" class="text1">金额:{{item.price}}元</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="order_handle" style="width:100%;float:right;border-bottom:solid 1px #e0e0e0">
+        <view class="order_del">
+            <view class="del_btn" style="{{fonts[3].font}}"   bindtap="intoPath" data-path="/pages/userOrderDeatil/userOrderDeatil">详情</view>
+        </view>
+        <view class="order_del">
+            <view class="del_btn" style="{{fonts[3].font}}" data-id="{{item.id}}" bindtap='deleteOrder' wx:if="{{item.pay_status == '0'}}">立即提货</view>
+        </view>
+      </view>
+      <!--
+      <view  style="font-size:12px;color:#666;width:100%;border-bottom:solid 1px #e0e0e0;" wx:if="{{item.pay_status == '1'&&item.order_step=='0'&&item.transport_status =='1'}}">
+            物流信息:{{item.express_info}}
+        </view>
+
+        <view class="order_del">
+            <view class="del_btn" style="{{fonts[3].font}}" data-id="{{item.id}}"  bindtap='orderUpdate' wx:if="{{item.pay_status == '1'&&item.order_step=='0'&&item.transport_status =='1'}}">确认订单</view>
+        </view>
+        -->
+    </view>
+  </block>
+</view>

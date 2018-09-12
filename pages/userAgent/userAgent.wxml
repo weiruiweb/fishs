@@ -1,0 +1,31 @@
+<!--manageAddress.wxml-->
+<view class="user_input">
+	<view class="users_detail flexRowBetween">
+		<view class="input_note" >姓名:</view>
+		<input placeholder="请填写姓名" value="{{web_mainData.name}}"  data-key="name" bindblur="inputChange"></input>
+	</view>
+</view>
+<view class="user_input">
+	<view class="users_detail flexRowBetween">
+		<view class="input_note">电话:</view>
+		<input placeholder="请填写电话" value="{{web_mainData.name}}"  data-key="name" bindblur="inputChange"></input>
+	</view>
+</view>
+<view class="user_input">
+	<view class="users_detail flexRowBetween">
+		<view class="input_note" style="width:27%;">经销商编码:</view>
+		<view style="width:73%;"><input placeholder="请填写电话" value="{{web_mainData.name}}"  data-key="name" bindblur="inputChange"></input></view>
+	</view>
+</view>
+<view class="user_input">
+	<view class="users_detail flexRowBetween">
+		<view class="input_note" style="width:24%;">店铺名称:</view>
+		<view style="width:76%;"><input placeholder="请填写店铺名称" value="{{web_mainData.name}}"  data-key="name" bindblur="inputChange"></input></view>
+	</view>
+</view>
+
+<view class="submit_info" bindtap="submit"   bindtap="intoPath" data-path="/pages/agent/agent">
+	立即进入
+</view>
+
+
