@@ -68,19 +68,19 @@
 <view class="navbar">
     <view class="navbar_item" bindtap="intoPath" data-path="/pages/index/index">
         <view class="nav_img">
-          <image src="/images/navbar1.png" style="width:50rpx;height:48rpx;"></image>
+          <image src="/images/navbar1.png" style="width:44rpx;height:44rpx;"></image>
         </view>
         <view class="text" style="{{fonts[2].font}}">首页</view>
     </view>
     <view class="navbar_item"  bindtap="intoPath" data-path="/pages/buy/buy">  
         <view class="nav_img">
-           <image src="/images/navbar2-a.png" style="width:50rpx;height:48rpx;"></image>
+           <image src="/images/navbar2-a.png" style="width:44rpx;height:44rpx;"></image>
         </view>
         <view class="text this-text" style="{{fonts[2].font}}">购买</view>    
     </view> 
     <view class="navbar_item"  bindtap="intoPath" data-path="/pages/user/user">
         <view class="nav_img">
-            <image src="/images/navbar3.png" style="width:50rpx;height:48rpx;"></image>
+            <image src="/images/navbar3.png" style="width:44rpx;height:44rpx;"></image>
         </view>
         <view class="text" style="{{fonts[2].font}}">我的</view>
     </view>
