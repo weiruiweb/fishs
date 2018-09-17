@@ -14,15 +14,18 @@
             </view>
           </view>
         </view>
-        <view class="buy_wirte flex">
-          <view class="input_before">卡号:</view>
-          <view class="buy_input">
-            <input placeholder="请选择分类" bindinput="changeBind" data-key="passage1" value="{{web_submitData.passage1}}"></input>
-          </view>
-          <view class="next_icon" style="width:18.5%;text-align:center;height:60rpx;">
-              <image src="/images/buy_add.png" style="width:60rpx;height:60rpx;"></image>
+        <block wx:for="{{web_cardNum}}" wx:key="key">
+          <view class="buy_wirte flex">
+            <view class="input_before">卡号:</view>
+            <view class="buy_input">
+              <input placeholder="请选择分类" bindblur="changeBind" data-key="passage1" data-index="{{index}}" ></input>
             </view>
-        </view>
+            <view class="next_icon" style="width:18.5%;text-align:center;height:60rpx;" bindtap="addCardNum">
+                <image src="/images/buy_add.png" style="width:60rpx;height:60rpx;"></image>
+              </view>
+          </view>
+        </block>
+        
         <view class="flex">
           <view class="input_before">金额:</view>
           <view  style="font-size:36rpx;color:#ff1212;">

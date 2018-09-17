@@ -15,19 +15,23 @@ Page({
     buttonClicked: false,
     submitData:{
       passage4:'',
-      passage1:''
+      passage1:[]
 
     },
-    id:''
+    id:'',
+    cardNum:[1],
+    
   },
   //事件处理函数
 
 
   onLoad(){
     const self = this;
-    
     self.data.paginate = api.cloneForm(getApp().globalData.paginate);
-    self.getartData()
+    self.getartData();
+    self.setData({
+      web_cardNum:self.data.cardNum
+    });
   },
 
   onShow(){
@@ -48,7 +52,15 @@ Page({
   },
 
 
-  
+  addCardNum(){
+    const self = this;
+    var newCard = self.data.cardNum[self.data.cardNum.length-1] + 1;
+    self.data.cardNum.push(newCard);
+    self.setData({
+      web_cardNum:self.data.cardNum
+    });
+  },
+
 
   getMainData(isNew){
     const self = this;
@@ -87,8 +99,17 @@ Page({
 
   changeBind(e){
     const self = this;
-    api.fillChange(e,self,'submitData');
+    var key = api.getDataSet(e,'key');
+    var index = api.getDataSet(e,'index');
+    console.log('index',index);
+    if(key=='passage1'){
+      self.data.submitData.passage1[index]  = e.detail.value;
+    }else{
+      api.fillChange(e,self,'submitData');
+    };
+    
     console.log(self.data.submitData);
+    
     self.setData({
       web_submitData:self.data.submitData,
     });  
@@ -171,18 +192,27 @@ Page({
         self.setData({
           buttonClicked: true
         });
-        const postData = {
-          token:wx.getStorageSync('token'),
-          product:[
-            {id:self.data.payData.id,count:1}
-          ],
-          pay:{wxPay:self.data.payData.price},
-          type:1,
-          data:{
-            passage1:self.data.submitData.passage1,
-            passage4:self.data.submitData.passage4 
-          }
+        const postData = [];
+
+        for(var i=0;i<self.data.submitData.passage1.length;i++){
+          if(self.data.submitData.passage1[i]){
+            postData.push(
+              {
+                token:wx.getStorageSync('token'),
+                product:[
+                  {id:self.data.payData.id,count:1}
+                ],
+                pay:{wxPay:self.data.payData.price},
+                type:1,
+                data:{
+                  passage1:self.data.submitData.passage1[i],
+                  passage4:self.data.submitData.passage4 
+                }
+              }
+            )
+          };
         };
+        console.log('postData',postData);
         const callback = (res)=>{
           if(res&&res.solely_code==100000){
             setTimeout(function(){
