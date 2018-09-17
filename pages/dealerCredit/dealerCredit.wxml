@@ -11,7 +11,7 @@
 		</view>
 		<view class="user_cre">
 			<view class="user_cres" style="color:#01bdea;">
-				佣金:{{web_computeData.info.FlowLog.countsum}}	
+				佣金:{{web_userData.info.data[0].balance}}
 			</view>
 		</view>
 	</view>

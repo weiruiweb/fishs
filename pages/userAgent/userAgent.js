@@ -2,65 +2,129 @@
 //获取应用实例
 import {Api} from '../../utils/api.js';
 const api = new Api();
+import {Token} from '../../utils/token.js';
+const token = new Token();
 
 Page({
-
-
   data: {
-    region: ['陕西省', '西安市', '雁塔区'],
     sForm:{
+      login_name:'',
+      parent_no:'', 
+      behavior:1,
       name:'',
-      province:'陕西省',
-      city:'西安市',
-      country:'雁塔区',
       phone:'',
-      detail:'',
+      address:' '
     },
-    id:'',
+
+    mainData:[],
+    
   },
 
-  onLoad: function (options) {
-    const self=this;
-    if(options.id){
-      self.data.id = options.id
-      self.getMainData(self.data.id); 
-    }else{
+
+  onLoad(){
+    const self = this;
+    self.userInfoGet();
+  },
+
+
+  userInfoGet(){
+    const self = this;
+    const postData = {};
+    postData.token = wx.getStorageSync('token');
+    const callback = (res)=>{
+      console.log(res)
+      self.data.mainData = res;
+      self.data.sForm.phone = res.info.data[0].info.phone;
+      self.data.sForm.login_name = res.info.data[0].login_name;
+      self.data.sForm.parent_no = res.info.data[0].parent_no;
+      self.data.sForm.name = res.info.data[0].info.name;
+      self.data.sForm.address = res.info.data[0].info.address;
       self.setData({
-        web_region:self.data.region
-      })
+        web_sForm:self.data.sForm,
+        web_mainData:self.data.mainData
+      });
+      wx.hideLoading();
     };
-  
+    api.userGet(postData,callback);
   },
 
- intoPath(e){
+
+  changeBind(e){
+    const self = this;
+    api.fillChange(e,self,'sForm');
+    console.log(self.data.sForm);
+    self.setData({
+      web_sForm:self.data.sForm,
+    });  
+  },
+
+
+  intoPath(e){
     const self = this;
     api.pathTo(api.getDataSet(e,'path'),'nav');
   },
+
+
+  userUpdate(){
+    const self = this;
+    const postData = {};
+    postData.token = wx.getStorageSync('token');
+    postData.data = {
+      login_name:self.data.sForm.login_name,
+      parent_no:self.data.sForm.parent_no,
+    };
+    postData.searchItem ={
+      status:1
+    };
+    postData.saveAfter =[
+       {
+        tableName:'user_info',
+        FuncName:'update',
+        searchItem:{
+          user_no:wx.getStorageSync('info').user_no
+        },
+        data:{
+          name:self.data.sForm.name,
+          phone:self.data.sForm.phone,
+          address:self.data.sForm.address,
+          behavior:1
+        }
+      }
+    ]
+    const callback = (data)=>{
+      wx.hideLoading();
+      if(data.solely_code==100000){
+        api.showToast('申请成功了','none')
+        token.getUserInfo();
+        setTimeout(function(){
+          wx.navigateBack({
+            delta: 1
+          });
+        },300); 
+      }else{
+        api.showToast('网络故障','none')
+      };
+    };
+    api.userUpdate(postData,callback);
+  },
   
+
+  
+
   submit(){
     const self = this;
-    var phone = self.data.sForm.phone;
     const pass = api.checkComplete(self.data.sForm);
-    if(pass){
-      if(phone.trim().length != 11 || !/^1[3|4|5|6|7|8|9]\d{9}$/.test(phone)){
-        api.showToast('手机格式不正确','fail')
-      }else{
-        if(self.data.id){
-          wx.showLoading();     
-          self.addressUpdate();
-        }else{
+    console.log(self.data.sForm)
+    if(pass){  
           wx.showLoading();
-          self.addressAdd();
-        }
-        setTimeout(function(){
-          api.pathTo('/pages/userAddress/userAddress','redi')
-        },1000);  
-      }
+          const callback = (user,res) =>{
+            self.userUpdate(); 
+          };
+          api.getAuthSetting(callback);      
+      
     }else{
-      api.showToast('请补全信息','fail');
+      api.showToast('请补全信息','none');
     };
   },
-
-
+ 
 })
-

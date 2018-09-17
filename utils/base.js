@@ -12,7 +12,7 @@ class Base{
     //http 请求类, 当noRefech为true时，不做未授权重试机制
     request(params) {
         var that = this;
-        var baseRestUrl = 'https://liubin.yisuiyanghuoguo.com/liubin/public/index.php/api/v1/';
+        var baseRestUrl = 'https://feichangyu.com/salecard/public/index.php/api/v1/';
         var url=baseRestUrl + params.url;
         
         

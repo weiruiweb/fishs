@@ -24,10 +24,26 @@ Page({
  getMainData(isNew){
     const self = this;
     const postData = {};
-    postData.token = wx.getStorageSync('token');
+    postData.token = wx.getStorageSync('threeToken');
     postData.searchItem = {
       id:self.data.id,
       user_type:0
+    };
+    postData.getAfter = {
+      user:{
+        tableName:'user',
+        middleKey:'user_no',
+        key:'user_no',
+        condition:'in',
+        info:['login_name','behavior']
+      }, 
+      userInfo:{
+        tableName:'user_info',
+        middleKey:'user_no',
+        key:'user_no',
+        condition:'in',
+        info:['name']
+      },
     };
     const callback = (res)=>{
       if(res.info.data.length>0){

@@ -4,7 +4,7 @@
 		娃娃鱼
 	</view>
 	<view class="poster_img">
-		<image src="{{web_QrData.info.url}}"></image>
+		<image src="/images/qrcoed.jpg"></image>
 	</view>
 	<view class="poster_txt2" style="{{fonts[3].font}}">
 		扫一扫二维码，赶快加入我们

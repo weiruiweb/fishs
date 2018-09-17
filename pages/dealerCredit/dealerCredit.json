@@ -1,3 +1,4 @@
 {
-  "navigationBarTitleText": "经销商入口"
+  "navigationBarTitleText": "我的佣金",
+  "enablePullDownRefresh":true
 }

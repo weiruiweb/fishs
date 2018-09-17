@@ -8,6 +8,7 @@
     "pages/userAdressCom/userAdressCom",
     "pages/userAddressNew/userAddressNew",
     "pages/userOrderDeatil/userOrderDeatil",
+    "pages/userOrderDeatilTwo/userOrderDeatilTwo",
     "pages/dealers/dealers",
     "pages/dealers1/dealers1",
     "pages/dealersUser/dealersUser",
@@ -17,10 +18,9 @@
     "pages/dealerCashMo/dealerCashMo",
     "pages/dealerOrder/dealerOrder",
     "pages/dealerOrderNext/dealerOrderNext",
-    "pages/dealerGoods/dealerGoods",
     "pages/dealerPoster/dealerPoster",
     "pages/userAgent/userAgent",
-    "pages/agent/agent"
+    "pages/login/login"
   ],
   "window": {
     "backgroundTextStyle": "light",

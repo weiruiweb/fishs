@@ -43,76 +43,30 @@
 	</view>		
 </view>
 <view class="store">
-	<view class="store_list flexRowBetween">
-		<view class="store_in flexRowBetween">
-			<view class="store_left">
-				<image src="/images/user_icon2.png"></image>
-			</view>
-			<view class="store_center">
-				<view class="text1 flex" >
-					<view class="text2">店铺名：</view>
-					<view class="text3">名称名称名称</view>
+	<block wx:for="{{web_mainData}}" wx:key="id">
+		<view class="store_list flexRowBetween">
+			<view class="store_in flexRowBetween">
+				<view class="store_left">
+					<image src="{{item.headImgUrl}}"></image>
 				</view>
-				<view class="text1 flex">
-					<view class="text2">店主姓名：</view>
-					<view  class="text3">姓名</view>
+				<view class="store_center">
+					<view class="text1 flex" >
+						<view class="text2">店铺名：</view>
+						<view class="text3">{{item.login_name}}</view>
+					</view>
+					<view class="text1 flex">
+						<view class="text2">店主姓名：</view>
+						<view  class="text3">{{item.info.name}}</view>
+					</view>
+					<view class="text1 flex">
+						<view class="text2">加入时间：</view>
+						<view  class="text3">{{item.update_time}}</view>
+					</view>
 				</view>
-				<view class="text1 flex">
-					<view class="text2">加入时间：</view>
-					<view  class="text3">2018-08-30</view>
+				<view class="store_right" >
+					详情
 				</view>
-			</view>
-			<view class="store_right" >
-				详情
 			</view>
 		</view>
-	</view>
-	<view class="store_list flexRowBetween">
-		<view class="store_in flexRowBetween">
-			<view class="store_left">
-				<image src="/images/user_icon2.png"></image>
-			</view>
-			<view class="store_center">
-				<view class="text1 flex" >
-					<view class="text2">店铺名：</view>
-					<view class="text3">名称名称名称</view>
-				</view>
-				<view class="text1 flex">
-					<view class="text2">店主姓名：</view>
-					<view  class="text3">姓名</view>
-				</view>
-				<view class="text1 flex">
-					<view class="text2">加入时间：</view>
-					<view  class="text3">2018-08-30</view>
-				</view>
-			</view>
-			<view class="store_right" >
-				详情
-			</view>
-		</view>
-	</view>
-	<view class="store_list flexRowBetween">
-		<view class="store_in flexRowBetween">
-			<view class="store_left">
-				<image src="/images/user_icon2.png"></image>
-			</view>
-			<view class="store_center">
-				<view class="text1 flex" >
-					<view class="text2">店铺名：</view>
-					<view class="text3">名称名称名称</view>
-				</view>
-				<view class="text1 flex">
-					<view class="text2">店主姓名：</view>
-					<view  class="text3">姓名</view>
-				</view>
-				<view class="text1 flex">
-					<view class="text2">加入时间：</view>
-					<view  class="text3">2018-08-30</view>
-				</view>
-			</view>
-			<view class="store_right" >
-				详情
-			</view>
-		</view>
-	</view>
+	</block>
 </view>

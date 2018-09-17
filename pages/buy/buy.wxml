@@ -6,7 +6,9 @@
         <view class="buy_wirte flex">
           <view class="input_before">分类:</view>
           <view class="buy_input flex">
-            <input palceholder="请选择分类"></input>
+              <picker bindchange="bindPickerChange" value="{{index}}" range="{{web_mainData}}" range-key="title" style="width:90%;font-size:26rpx;color:#999" data-id="{{web_mainData[index].id}}">
+                  当前选择:{{web_mainData[index].title}}
+              </picker>  
             <view class="next_icon" style="width:10%;text-align:right;">
               <image src="/images/next_page.jpg" style="width:18rpx;height:33rpx;"></image>
             </view>
@@ -15,7 +17,7 @@
         <view class="buy_wirte flex">
           <view class="input_before">卡号:</view>
           <view class="buy_input">
-            <input placeholder="请选择分类"></input>
+            <input placeholder="请选择分类" bindinput="changeBind" data-key="passage1" value="{{web_submitData.passage1}}"></input>
           </view>
           <view class="next_icon" style="width:18.5%;text-align:center;height:60rpx;">
               <image src="/images/buy_add.png" style="width:60rpx;height:60rpx;"></image>
@@ -24,20 +26,20 @@
         <view class="flex">
           <view class="input_before">金额:</view>
           <view  style="font-size:36rpx;color:#ff1212;">
-            555.00元
+            {{web_mainData[index].price}}元
           </view>
         </view>
         <view class="flex" style="margin-top:50rpx;">
           <view class="input_before" style="width:22%;">手机号:</view>
           <view class=""  style="width:74%;padding:0 2%;border-bottom:solid 1px #e0e0e0;">
-            <input placeholder="请输入手机号" style="font-size:26rpx;  "></input>
+            <input placeholder="请输入手机号" style="font-size:26rpx;" bindinput="changeBind" data-key="passage4" value="{{web_submitData.passage4}}"></input>
           </view> 
           
         </view>
         <view style="padding-left:22%;font-size:20rpx;color:#666;margin-top:20rpx;">
             (说明：卡号和手机号码必填一项，如无卡号请 填写手机号码，我们将会安排专人30分钟内与 您取得联系)
         </view>
-        <view class="submit_info">
+        <view class="submit_info" bindtap="{{!buttonClicked?'addOrder':''}}">
           立即支付
         </view>
     </view>
@@ -46,14 +48,12 @@
     <view class="regular">
       <view class="regular_cont">
           <view class="regular_tlt">
-              购买规则
+              {{web_artData.title}}
           </view>
           <view class="regular_item">
             <view class="content ql-editor" >
-              <import src="../../wxParse/wxParse.wxml"/>
-             <!-- <template is="wxParse" data="{{wxParseData:web_artData.content}}"/> -->
-             <view style="margin-bottom:20rpx;line-height:40rpx;">1、此页面购买商品为3-4斤娃娃鱼活体礼品装一条    （包邮）/卡片激活，如有疑问请拨24小时人工客服热线：40</view>
-             <view style="margin-bottom:20rpx;line-height:40rpx;">3、请仔细核对需要购买提货卡的卡号，如因填写错      误造成提货卡激活，本司概不负责。</view>
+                <import src="../../wxParse/wxParse.wxml"/>
+                <template is="wxParse" data="{{wxParseData:web_artData.content}}"/>
             </view> 
           </view>
       </view>
@@ -66,19 +66,19 @@
 <view style="height:120rpx;width:100%;">
 </view>
 <view class="navbar">
-    <view class="navbar_item" bindtap="intoPath" data-path="/pages/index/index">
+    <view class="navbar_item" bindtap="intoPathRedi" data-path="/pages/index/index">
         <view class="nav_img">
           <image src="/images/navbar1.png" style="width:44rpx;height:44rpx;"></image>
         </view>
         <view class="text" style="{{fonts[2].font}}">首页</view>
     </view>
-    <view class="navbar_item"  bindtap="intoPath" data-path="/pages/buy/buy">  
+    <view class="navbar_item"  >  
         <view class="nav_img">
            <image src="/images/navbar2-a.png" style="width:44rpx;height:44rpx;"></image>
         </view>
         <view class="text this-text" style="{{fonts[2].font}}">购买</view>    
     </view> 
-    <view class="navbar_item"  bindtap="intoPath" data-path="/pages/user/user">
+    <view class="navbar_item"  bindtap="intoPathRedi" data-path="/pages/user/user">
         <view class="nav_img">
             <image src="/images/navbar3.png" style="width:44rpx;height:44rpx;"></image>
         </view>

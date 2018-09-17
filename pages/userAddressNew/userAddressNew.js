@@ -10,9 +10,8 @@ Page({
     region: ['陕西省', '西安市', '雁塔区'],
     sForm:{
       name:'',
-      province:'陕西省',
-      city:'西安市',
-      country:'雁塔区',
+      latitude:'',
+      longitude:'',
       phone:'',
       detail:'',
     },
@@ -128,6 +127,32 @@ Page({
     }else{
       api.showToast('请补全信息','fail');
     };
+  },
+
+  chooseLocation:function(e){
+    var self = this;
+    wx.chooseLocation({
+      success: function(res){
+        self.data.sForm.detail = res.address,
+        self.data.sForm.longitude = res.longitude,
+        self.data.sForm.latitude = res.latitude,
+        self .setData({
+          hasLocation:true,
+          location:{
+            longitude:res.longitude,
+            latitude:res.latitude
+          },
+          web_mainData:self.data.sForm,
+          web_name:res.name,
+        })
+      },
+      fail: function() {
+      // fail
+      },
+      complete: function() {
+      // complete
+      }
+    })
   },
 
 

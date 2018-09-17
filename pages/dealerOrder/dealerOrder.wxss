@@ -72,7 +72,7 @@ page{
 }
 .orderProname{
 	color:#262626;
-	height:62.5%;
+	height:30.5%;
 	overflow:hidden;
 }
 .order_attr{
@@ -94,7 +94,7 @@ page{
 	width:40%;
 	align-items:center;
 	color:#e62c2c;
-	text-align:right;
+
 }
 
 .order_handle{

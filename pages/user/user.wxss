@@ -60,3 +60,7 @@
 	color:#666;
 	height:60rpx;
 }
+.agent_cont{
+	width:80%;
+	margin:0 auto;
+}

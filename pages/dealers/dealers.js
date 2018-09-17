@@ -21,6 +21,7 @@ Page({
       fonts:app.globalData.font
     })
   },
+  
   intoPath(e){
     const self = this;
     api.pathTo(api.getDataSet(e,'path'),'nav');

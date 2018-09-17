@@ -82,7 +82,7 @@ class Token {
                 };
 
                 wx.request({
-                    url: 'https://liubin.yisuiyanghuoguo.com/liubin/public/index.php/api/v1/Base/ProgrameToken/get',
+                    url: 'https://feichangyu.com/salecard/public/index.php/api/v1/Base/ProgrameToken/get',
                     method:'POST',
                     data:postData,
                     success:function(res){
@@ -122,7 +122,7 @@ class Token {
                 password:wx.getStorageSync('login').password,
             }
             wx.request({
-                url: 'https://liubin.yisuiyanghuoguo.com/liubin/public/index.php/api/v1/Func/Common/loginByUp',
+                url: 'https://feichangyu.com/salecard/public/index.php/api/v1/Func/Common/loginByUp',
                 method:'POST',
                 data:postData,
                 success:function(res){
@@ -163,7 +163,7 @@ class Token {
             })
         }else{
             wx.redirectTo({
-              url: '/pages/Index/index'
+              url: '/pages/index/index'
             });
         };
         

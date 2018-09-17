@@ -8,7 +8,10 @@ Page({
    num:1,
    mainData:[],
    searchItem:{
-      thirdapp_id:'59',
+    thirdapp_id:'2',
+    pay_status : '1',
+    transport_status : '0',
+    order_step : '0',
     },
   },
 
@@ -25,6 +28,19 @@ Page({
     self.getMainData()
   },
 
+  onShow(){
+    const self = this;
+    if(wx.getStorageSync('threeInfo')&&wx.getStorageSync('threeToken')){
+      self.setData({
+        web_show:true
+      })
+    }else{
+      wx.redirectTo({
+        url: '/pages/login/login'
+      })
+    };
+  },
+
 
   getMainData(isNew){
     const self = this;
@@ -33,7 +49,7 @@ Page({
     };
     const postData = {};
     postData.paginate = api.cloneForm(self.data.paginate);
-    postData.token = wx.getStorageSync('token');
+    postData.token = wx.getStorageSync('threeToken');
     postData.searchItem = api.cloneForm(self.data.searchItem)
     postData.order = {
       create_time:'desc'
@@ -56,7 +72,7 @@ Page({
   deleteOrder(e){
     const self = this;
     const postData = {};
-    postData.token = wx.getStorageSync('token');
+    postData.token = wx.getStorageSync('threeToken');
     postData.searchItem = {};
     postData.searchItem.id = api.getDataSet(e,'id');
     const callback  = res=>{
@@ -69,10 +85,10 @@ Page({
   orderUpdate(e){
     const self = this;
     const postData = {};
-    postData.token = wx.getStorageSync('token');
+    postData.token = wx.getStorageSync('threeToken');
     postData.data ={
-      transport_status:2,
-      order_step:3
+      transport_status:3,
+      order_step:2
     }
     postData.searchItem = {};
     postData.searchItem.id = api.getDataSet(e,'id');
@@ -90,7 +106,7 @@ Page({
     var id = api.getDataSet(e,'id');
     var score = api.getDataSet(e,'score')
     const postData = {
-      token:wx.getStorageSync('token'),
+      token:wx.getStorageSync('threeToken'),
       searchItem:{
         id:id
       },
@@ -117,20 +133,21 @@ Page({
     });
     self.data.searchItem = {};
     if(num=='1'){
-
-    }else if(num=='2'){
-      self.data.searchItem.pay_status = '0';
-      self.data.searchItem.order_step = '0';
-    }else if(num=='3'){
       self.data.searchItem.pay_status = '1';
       self.data.searchItem.transport_status = '0';
       self.data.searchItem.order_step = '0';
+    }else if(num=='2'){
+      self.data.searchItem.pay_status = '1';
+      self.data.searchItem.order_step = '0';
+      self.data.searchItem.transport_status = '1';
+    }else if(num=='3'){
+      self.data.searchItem.pay_status = '1';
+      self.data.searchItem.order_step = '0';
+      self.data.searchItem.transport_status = '2';
     }else if(num=='4'){
       self.data.searchItem.pay_status = '1';
-      self.data.searchItem.transport_status = '1';
       self.data.searchItem.order_step = '0';
-    }else if(num=='5'){
-      self.data.searchItem.order_step = '3';
+      self.data.searchItem.transport_status = '3';
     }
     self.setData({
       web_mainData:[],
@@ -145,6 +162,22 @@ Page({
       self.data.paginate.currentPage++;
       self.getMainData();
     };
+  },
+
+  intoPath(e){
+    const self = this;
+    api.pathTo(api.getDataSet(e,'path'),'nav');
+  },
+
+
+  intoPathRedi(e){
+    const self = this;
+    api.pathTo(api.getDataSet(e,'path'),'redi');
+  },
+
+  intoPathRela(e){
+    const self = this;
+    api.pathTo(api.getDataSet(e,'path'),'rela');
   },
 
 

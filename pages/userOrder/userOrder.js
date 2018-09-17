@@ -8,7 +8,10 @@ Page({
    num:1,
    mainData:[],
    searchItem:{
-      thirdapp_id:'59',
+      thirdapp_id:'2',
+      pay_status : '1',
+      transport_status : '0',
+      order_step : '0',
     },
   },
 
@@ -36,7 +39,7 @@ Page({
     postData.token = wx.getStorageSync('token');
     postData.searchItem = api.cloneForm(self.data.searchItem)
     postData.order = {
-      create_time:'desc'
+      create_time:'desc',
     }
     const callback = (res)=>{
       if(res.info.data.length>0){
@@ -71,8 +74,7 @@ Page({
     const postData = {};
     postData.token = wx.getStorageSync('token');
     postData.data ={
-      transport_status:2,
-      order_step:3
+      transport_status:3,
     }
     postData.searchItem = {};
     postData.searchItem.id = api.getDataSet(e,'id');
@@ -117,20 +119,21 @@ Page({
     });
     self.data.searchItem = {};
     if(num=='1'){
-
-    }else if(num=='2'){
-      self.data.searchItem.pay_status = '0';
-      self.data.searchItem.order_step = '0';
-    }else if(num=='3'){
       self.data.searchItem.pay_status = '1';
       self.data.searchItem.transport_status = '0';
       self.data.searchItem.order_step = '0';
+    }else if(num=='2'){
+      self.data.searchItem.pay_status = '1';
+      self.data.searchItem.order_step = '0';
+      self.data.searchItem.transport_status = '1';
+    }else if(num=='3'){
+      self.data.searchItem.pay_status = '1';
+      self.data.searchItem.order_step = '0';
+      self.data.searchItem.transport_status = '2';
     }else if(num=='4'){
       self.data.searchItem.pay_status = '1';
-      self.data.searchItem.transport_status = '1';
       self.data.searchItem.order_step = '0';
-    }else if(num=='5'){
-      self.data.searchItem.order_step = '3';
+      self.data.searchItem.transport_status = '3';
     }
     self.setData({
       web_mainData:[],
@@ -147,5 +150,19 @@ Page({
     };
   },
 
+  intoPath(e){
+    const self = this;
+    api.pathTo(api.getDataSet(e,'path'),'nav');
+  },
+
+  intoPathRedi(e){
+    const self = this;
+    api.pathTo(api.getDataSet(e,'path'),'redi');
+  },
+
+  intoPathRela(e){
+    const self = this;
+    api.pathTo(api.getDataSet(e,'path'),'rela');
+  },
 
 })

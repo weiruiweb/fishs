@@ -7,266 +7,287 @@ const token = new Token();
 Page({
   data: {
    
-    
-    id:'',
-
-    mainImg:[],
-    submitData:{
-      content:'',
-      passage1:'',
-      mainImg:[],
-      title:'',
-      keywords:'',
-      phone:'',
-      passage_array:'',
-      product_no:'',
-      passage2:'',
-     
+    searchItem:{
+       thirdapp_id:getApp().globalData.thirdapp_id
     },
-      is_show:false,
-      max: 400,
-      currentWordNumber:400,
-      spacing:'50px',
-    
-    
+    mainData:[],
+    index:0,
+    buttonClicked: false,
+    submitData:{
+      passage4:'',
+      passage1:''
+
+    },
+    id:''
   },
   //事件处理函数
-  preventTouchMove:function(e) {
 
+
+  onLoad(){
+    const self = this;
+    
+    self.data.paginate = api.cloneForm(getApp().globalData.paginate);
+    self.getartData()
   },
 
-  onLoad(options){
+  onShow(){
     const self = this;
-    self.data.id = options.id;
-    self.data.submitData.product_no = options.id;
-    console.log(self.data.product_no)
-    self.setData({
-      is_show:self.data.is_show,
-      web_currentWordNumber:400
-    });
-    self.getMainData()
-  },
-
-
-  bindRegionChange: function (e) {
-    const self = this;
-    console.log('picker发送选择改变，携带值为', e.detail.value)
-    self.data.submitData.passage1 = e.detail.value[0]+e.detail.value[1]+e.detail.value[2];
-    self.setData({
-      web_region: e.detail.value
-    })
-  },
-
-  messageAdd(){
-    const self = this;
-    const postData = {};
-    postData.token = wx.getStorageSync('token');
-    postData.data = {};
-    postData.data = api.cloneForm(self.data.submitData);
-
-    const callback = (data)=>{
-      if(data.solely_code == 100000){
-        self.data.is_show = true;
-        self.setData({
-          is_show:true
-        })
-      }else{
-        api.showToast('网络故障','none',3000);
-      };
-      wx.hideLoading(); 
+    if(wx.getStorageSync('info').behavior==0){
+      self.data.title = '普通用户',
+      self.data.token = wx.getStorageSync('token')
+    }else if(wx.getStorageSync('info').behavior==1){
+      self.data.title = '代理商',
+      self.data.token = wx.getStorageSync('token')
     };
-    api.messageAdd(postData,callback);
-      
+    if(wx.getStorageSync('threeToken')){
+      self.data.title = '经销商',
+      self.data.token = wx.getStorageSync('threeToken')
+    };
+    self.getMainData();
+    self.getPayData();
+  },
+
+
+  
+
+  getMainData(isNew){
+    const self = this;
+    if(isNew){
+      api.clearPageIndex(self);
+    }
+    const postData = {};
+    postData.token = self.data.token;
+    postData.searchItem = api.cloneForm(self.data.searchItem);
+    postData.getBefore = {
+      label:{
+        tableName:'label',
+        searchItem:{
+          title:['=',[self.data.title]],
+        },
+        fixSearchItem:{
+          thirdapp_id:getApp().globalData.thirdapp_id
+        },
+        middleKey:'category_id',
+        key:'id',
+        condition:'in'
+      },
+    };
+    const callback = (res)=>{
+      if(res.info.data.length>0){
+        self.data.mainData.push.apply(self.data.mainData,res.info.data);
+      };
+      wx.hideLoading();
+      self.setData({
+        web_mainData:self.data.mainData,
+      });     
+      console.log(self.data.mainData)
+    };
+    api.productGet(postData,callback);
   },
 
   changeBind(e){
     const self = this;
     api.fillChange(e,self,'submitData');
-      self.setData({
-        web_submitData:self.data.submitData,
-      });  
-    console.log(self.data.submitData)
-  },
-
-  currentWordNumber(e){
-    const self = this;
-    var currentWordNumber = api.fillChange(e,self,'submitData');
-    var value = e.detail.value;
-    var len = parseInt(value.length);
-    if (len > self.data.max){
-      return;
-    } 
-      var lens = parseInt(400 - len)
-      self.setData({
-        web_submitData:self.data.submitData,
-        web_currentWordNumber: lens,
-      });  
-  },
-
-  reSetInfomation(){
-    const self = this;
-    self.data.submitData = {
-      content:'',
-      passage1:'',
-      mainImg:[],
-      title:'',
-      keywords:'',
-      phone:'',
-      passage_array:'',
-      product_no:'',
-      passage2:'',
-    };
+    console.log(self.data.submitData);
     self.setData({
       web_submitData:self.data.submitData,
-    }); 
+    });  
   },
 
 
-  submit(){
+
+  bindPickerChange: function(e) {
     const self = this;
-    var name  = self.data.submitData.title;
-    var id_num = self.data.submitData.keywords;
-    var newObject = api.cloneForm(self.data.submitData);
-
-    delete newObject.mainImg;
-    delete newObject.passage2;
-    delete newObject.passage1;
-
-    const pass = api.checkComplete(newObject);
-    if(pass){
-      if(!id_num || !/^\d{6}(18|19|20)?\d{2}(0[1-9]|1[012])(0[1-9]|[12]\d|3[01])\d{3}(\d|[xX])$/.test(id_num)){
-        api.showToast('身份证格式错误','none')
-      }else{
-        if(!/^[\u4E00-\u9FA5]+$/.test(name)){
-          api.showToast('姓名格式错误','none')
-        }else{
-          self.messageAdd();
-        }
-      }
-    }else{
-      api.showToast('请补全信息','none');
-    };
+    console.log(e)
+    var id =  self.data.mainData[e.detail.value].id;
+    self.getPayData(id);
+    console.log(id)
+    self.setData({
+      index: e.detail.value,
+    })
   },
 
+  getPayData(id){
+    const self = this;
+    const postData = {};
+    postData.token = self.data.token;
+    postData.searchItem = api.cloneForm(self.data.searchItem);
+    if(id){
+      postData.searchItem.id = id; 
+    }else{
+      postData.searchItem.id =''
+    }
+    
+    const callback = (res)=>{
+      if(res.info.data.length>0){
+        self.data.payData = res.info.data[0]
+      }else{
+        self.data.payData = self.data.mainData[0]
+      }
+      wx.hideLoading();    
+      console.log(self.data.payData)
+    };
+    api.productGet(postData,callback);
+  },
 
-
-  
-
-
-  getMainData(){
+  getartData(){
     const self = this;
     const postData = {};
     postData.searchItem = {
-      thirdapp_id:getApp().globalData.thirdapp_id,
-      id:self.data.id
+      thirdapp_id:getApp().globalData.thirdapp_id
+    };
+    postData.getBefore = {
+      article:{
+        tableName:'label',
+        searchItem:{
+          title:['=',['购买规则']],
+          thirdapp_id:['=',[getApp().globalData.thirdapp_id]],
+        },
+        middleKey:'menu_id',
+        key:'id',
+        condition:'in',
+      },
     };
     const callback = (res)=>{
-      self.data.mainData = {};
+      self.data.artData = {};
       if(res.info.data.length>0){
-        self.data.mainData = res.info.data[0];
-        self.data.mainData.content = api.wxParseReturn(res.info.data[0].content).nodes;
+        self.data.artData = res.info.data[0];
+        self.data.artData.content = api.wxParseReturn(res.info.data[0].content).nodes;
       };
-
+      console.log(self.data.artData);
+      wx.hideLoading();
       self.setData({
-        web_mainData:self.data.mainData,
+        web_artData:self.data.artData,
       });  
     };
     api.articleGet(postData,callback);
   },
 
+  addOrder(){
+    const self = this;
+    if(wx.getStorageSync('info')&&wx.getStorageSync('info').thirdApp.custom_rule.firstClass){
+      if(!self.data.order_id){
+        self.buttonClicked = true;
+        self.setData({
+          buttonClicked: true
+        });
+        const postData = {
+          token:wx.getStorageSync('token'),
+          product:[
+            {id:self.data.payData.id,count:1}
+          ],
+          pay:{wxPay:self.data.payData.price},
+          type:1,
+          data:{
+            passage1:self.data.submitData.passage1,
+            passage4:self.data.submitData.passage4 
+          }
+        };
+        const callback = (res)=>{
+          if(res&&res.solely_code==100000){
+            setTimeout(function(){
+              self.setData({
+                buttonClicked: false
+              })
+              self.buttonClicked = false;
+            }, 1000);
+            self.data.order_id = res.info.id;
+            self.pay(self.data.order_id);         
+          }else{
+            api.showToast('网络故障','none')
+             self.setData({
+                buttonClicked: false
+              })
+            self.buttonClicked = false;
+          } 
+        };
+        api.addOrder(postData,callback);
+      }else{
+        self.pay(self.data.order_id);
+          self.setData({
+            buttonClicked: false
+          })
+        self.buttonClicked = false;
+      };
+    }else{
+      var token = new Token();
+      const callback = (res)=>{
+        self.addOrder(res)
+        self.setData({
+          buttonClicked: false
+        })
+        self.buttonClicked = false;
+      };
+      token.getUserInfo({},callback);
+    }
+  },
+
+  pay(order_id){
+    const self = this;
+    var order_id = self.data.order_id;
+    const postData = {
+      token:wx.getStorageSync('token'),
+      searchItem:{
+        id:order_id
+      },
+      wxPay:self.data.mainData[0].price,
+      wxPayStatus:0
+    };
+    var reward = (wx.getStorageSync('info').thirdApp.custom_rule.firstClass*self.data.payData.price)/100;
+    postData.payAfter = [];
+    if(wx.getStorageSync('info').behavior==1&&wx.getStorageSync('info').parent_no!=''){
+      postData.payAfter.push(
+        {
+          tableName:'FlowLog',
+          FuncName:'add',
+          data:{
+            count:reward,
+            trade_info:'代理消费奖励',
+            user_no:wx.getStorageSync('info').parent_no,
+            type:2,
+            thirdapp_id:getApp().globalData.thirdapp_id
+          }
+        }
+      );
+    };
+    const callback = (res)=>{
+      wx.hideLoading();
+      if(res.solely_code==100000){
+        const payCallback=(payData)=>{
+          if(payData==1){
+            setTimeout(function(){
+              api.pathTo('/pages/userOrder/userOrder','redi');
+            },800)  
+          };   
+        };
+        api.realPay(res.info,payCallback);  
+      }else{
+        api.showToast('发起微信支付失败','fail')
+      };
+    };
+    api.pay(postData,callback);
+  },
+ 
+  
 
 
-  intoPath(e){
+   intoPath(e){
     const self = this;
     api.pathTo(api.getDataSet(e,'path'),'nav');
   },
 
   intoPathRedi(e){
     const self = this;
-    wx.navigateBack({
-      delta:1
-    })
+    api.pathTo(api.getDataSet(e,'path'),'redi');
   },
 
-  deleteImage(e) {
+  intoPathRela(e){
     const self = this;
-    var images = self.data.submitData.mainImg;
-    var index = e.currentTarget.dataset.index;
-    wx.showModal({
-     title: '提示',
-     content: '确定要删除此图片吗？',
-     success(res) {
-      if (res.confirm) {
-       images.splice(index, 1);
-      }else if (res.cancel) {
-        return false;    
-       }
-      self.setData({
-        web_submitData:self.data.submitData
-      });
-     }
-    })
-   },
-
-
-  upLoadImg: function (){
-    var self = this;
-    if(self.data.submitData.mainImg.length>2){
-      api.showToast('仅限3张','none');
-      return;
-    };
-    wx.showLoading({
-      mask: true,
-      title: '图片上传中',
-    });
-    var mainImg = self.data.mainImg
-    wx.chooseImage({
-      count:1,
-      success: function(res) {
-        console.log(res);
-        var tempFilePaths = res.tempFilePaths
-        wx.uploadFile({
-          url: 'https://liubin.yisuiyanghuoguo.com/liubin/public/index.php/api/v1/Base/FtpImage/upload',
-          filePath:tempFilePaths[0],
-          name: 'file',
-          formData: {
-            token:wx.getStorageSync('token')
-          },
-          success: function(res){
-            console.log(res);
-            res = JSON.parse(res.data);
-            console.log(res)
-            if(res.solely_code==100000&&res.info&&res.info.url){ 
-              self.data.submitData.mainImg.push({url:res.info.url})
-              self.setData({
-                web_submitData:self.data.submitData
-              });
-            }else{
-              token.getUserInfo();
-              api.showToast('请重新上传','none',3000);
-            };       
-            wx.hideLoading();
-            
-
-          },
-          fail: function(err){
-            wx.hideLoading();
-            api.showToast('上传失败','none',3000)
-          }
-        })
-      },
-      fail: function(err){
-        wx.hideLoading();
-      }
-    })
+    api.pathTo(api.getDataSet(e,'path'),'rela');
   },
 
-
-
   
 
-
-  
 
 
  

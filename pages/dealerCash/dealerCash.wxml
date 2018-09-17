@@ -2,7 +2,7 @@
 <view class="w710">
 	<view class="cash_top flexRowBetween">
 		<view class="top_left" style="font-size:36rpx;color:#00c6f7">
-			佣金：18800
+			佣金：{{web_userData.info.data[0].balance}}
 		</view>
 		<view top_left>
 			<view class="submit_info" bindtap="intoPath"  data-path="/pages/dealerCashMo/dealerCashMo">
@@ -19,20 +19,6 @@
 	</view>
 </view>
 <view  class="w710">
-	<view class="cash_list">
-		<view class="flexRowBetween" style="height:50%;">	
-			<view style="font-size:26rpx;color:#666;">体现</view>
-			<view style="font-size:26rpx;color:#00c6f7;">+70</view>
-		</view>
-		<view style="font-size:24rpx;color:#999;height:50%;">2018-4-17</view>
-	</view>
-	<view class="cash_list">
-		<view class="flexRowBetween" style="height:50%;">	
-			<view style="font-size:26rpx;color:#666;">体现</view>
-			<view style="font-size:28rpx;color:#00c6f7;">+70</view>
-		</view>
-		<view style="font-size:24rpx;color:#999;height:50%;">2018-4-17</view>
-	</view>
 	<view class="cash_list">
 		<view class="flexRowBetween" style="height:50%;">	
 			<view style="font-size:26rpx;color:#666;">体现</view>
