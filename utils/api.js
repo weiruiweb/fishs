@@ -226,6 +226,18 @@ class Api extends Base{
         this.request(allParams);
     }  
 
+    directPay(param,callback){
+        var allParams ={
+            url:'Base/WxPay/directPay',
+            type:'post',
+            data:param,
+            sCallback: function(data) {
+                callback && callback(data);
+            }
+        };
+        this.request(allParams);
+    }  
+
 
     changeCourseStatus(param,callback){
         var allParams ={
@@ -686,6 +698,18 @@ class Api extends Base{
     orderGet(param,callback){
         var allParams ={
             url:'Common/Order/get',
+            type:'post',
+            data:param,
+            sCallback: function(data) {
+                callback && callback(data);
+            }
+        };
+        this.request(allParams);
+    }
+
+    orderAddMulti(param,callback){
+        var allParams ={
+            url:'Func/Order/addMultiOrder',
             type:'post',
             data:param,
             sCallback: function(data) {

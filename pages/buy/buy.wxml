@@ -6,8 +6,8 @@
         <view class="buy_wirte flex">
           <view class="input_before">分类:</view>
           <view class="buy_input flex">
-              <picker bindchange="bindPickerChange" value="{{index}}" range="{{web_mainData}}" range-key="title" style="width:90%;font-size:26rpx;color:#999" data-id="{{web_mainData[index].id}}">
-                  当前选择:{{web_mainData[index].title}}
+              <picker bindchange="bindPickerChange" value="{{web_chooseIndex}}" range="{{web_mainData}}" range-key="title" style="width:90%;font-size:26rpx;color:#999" data-id="{{web_mainData[web_chooseIndex].id}}">
+                  当前选择:{{web_mainData[web_chooseIndex].title}}
               </picker>  
             <view class="next_icon" style="width:10%;text-align:right;">
               <image src="/images/next_page.jpg" style="width:18rpx;height:33rpx;"></image>
@@ -29,7 +29,7 @@
         <view class="flex">
           <view class="input_before">金额:</view>
           <view  style="font-size:36rpx;color:#ff1212;">
-            {{web_mainData[index].price}}元
+            {{web_mainData[web_chooseIndex].price}}元
           </view>
         </view>
         <view class="flex" style="margin-top:50rpx;">

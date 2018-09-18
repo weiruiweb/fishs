@@ -11,7 +11,6 @@ Page({
        thirdapp_id:getApp().globalData.thirdapp_id
     },
     mainData:[],
-    index:0,
     buttonClicked: false,
     submitData:{
       passage4:'',
@@ -20,6 +19,7 @@ Page({
     },
     id:'',
     cardNum:[1],
+    chooseIndex:0
     
   },
   //事件处理函数
@@ -30,8 +30,10 @@ Page({
     self.data.paginate = api.cloneForm(getApp().globalData.paginate);
     self.getartData();
     self.setData({
-      web_cardNum:self.data.cardNum
+      web_cardNum:self.data.cardNum,
+      web_chooseIndex: self.data.chooseIndex,
     });
+
   },
 
   onShow(){
@@ -42,13 +44,12 @@ Page({
     }else if(wx.getStorageSync('info').behavior==1){
       self.data.title = '代理商',
       self.data.token = wx.getStorageSync('token')
-    };
-    if(wx.getStorageSync('threeToken')){
+    }else if(wx.getStorageSync('threeToken')){
       self.data.title = '经销商',
       self.data.token = wx.getStorageSync('threeToken')
     };
     self.getMainData();
-    self.getPayData();
+    //self.getPayData();
   },
 
 
@@ -68,7 +69,7 @@ Page({
       api.clearPageIndex(self);
     }
     const postData = {};
-    postData.token = self.data.token;
+    //postData.token = self.data.token;
     postData.searchItem = api.cloneForm(self.data.searchItem);
     postData.getBefore = {
       label:{
@@ -120,36 +121,16 @@ Page({
   bindPickerChange: function(e) {
     const self = this;
     console.log(e)
-    var id =  self.data.mainData[e.detail.value].id;
-    self.getPayData(id);
-    console.log(id)
+    self.data.chooseIndex = e.detail.value;
+    //var id =  self.data.mainData[e.detail.value].id;
+    //self.getPayData(id);
+    //console.log(id)
     self.setData({
-      index: e.detail.value,
+      web_chooseIndex: self.data.chooseIndex,
     })
+
   },
 
-  getPayData(id){
-    const self = this;
-    const postData = {};
-    postData.token = self.data.token;
-    postData.searchItem = api.cloneForm(self.data.searchItem);
-    if(id){
-      postData.searchItem.id = id; 
-    }else{
-      postData.searchItem.id =''
-    }
-    
-    const callback = (res)=>{
-      if(res.info.data.length>0){
-        self.data.payData = res.info.data[0]
-      }else{
-        self.data.payData = self.data.mainData[0]
-      }
-      wx.hideLoading();    
-      console.log(self.data.payData)
-    };
-    api.productGet(postData,callback);
-  },
 
   getartData(){
     const self = this;
@@ -200,9 +181,9 @@ Page({
                 {
                   token:wx.getStorageSync('token'),
                   product:[
-                    {id:self.data.payData.id,count:1}
+                    {id:self.data.mainData[self.data.chooseIndex].id,count:1}
                   ],
-                  pay:{wxPay:self.data.payData.price},
+                  pay:{wxPay:self.data.mainData[self.data.chooseIndex].price},
                   type:1,
                   data:{
                     passage1:self.data.submitData.passage1[i],
@@ -212,14 +193,15 @@ Page({
               );
             };
           };
+
         }else{
           postData.push(
             {
               token:wx.getStorageSync('token'),
               product:[
-                {id:self.data.payData.id,count:1}
+                {id:self.data.mainData[self.data.chooseIndex].id,count:1}
               ],
-              pay:{wxPay:self.data.payData.price},
+              pay:{wxPay:self.data.mainData[self.data.chooseIndex].price},
               type:1,
               data:{
                 passage1:'',
@@ -227,6 +209,24 @@ Page({
               }
             }
           );
+        };
+        var reward = (wx.getStorageSync('info').thirdApp.custom_rule.firstClass*self.data.mainData[self.data.chooseIndex].price)/100;
+        if(wx.getStorageSync('info').behavior==1&&wx.getStorageSync('info').parent_no!=''){
+          for(var i=0;i<postData.length;i++){
+            postData[i].payAfter = [
+              {
+                tableName:'FlowLog',
+                FuncName:'add',
+                data:{
+                  count:reward,
+                  trade_info:'代理消费奖励',
+                  user_no:wx.getStorageSync('info').parent_no,
+                  type:2,
+                  thirdapp_id:getApp().globalData.thirdapp_id
+                }
+              }
+            ];
+          };
         };
         
         console.log('postData',postData);
@@ -238,7 +238,13 @@ Page({
               })
               self.buttonClicked = false;
             }, 1000);
-            self.data.order_id = res.info.id;
+            self.data.order_id = '';
+            for(var i=0;i<res.info.id.length;i++){
+              if(i>0){
+                self.data.order_id += '-';
+              };
+              self.data.order_id += res.info.id[i];
+            };
             self.pay(self.data.order_id);         
           }else{
             api.showToast('网络故障','none')
@@ -248,7 +254,7 @@ Page({
             self.buttonClicked = false;
           } 
         };
-        api.addOrder(postData,callback);
+        api.orderAddMulti(postData,callback);
       }else{
         self.pay(self.data.order_id);
           self.setData({
@@ -273,30 +279,15 @@ Page({
     const self = this;
     var order_id = self.data.order_id;
     const postData = {
-      token:wx.getStorageSync('token'),
-      searchItem:{
-        id:order_id
-      },
-      wxPay:self.data.mainData[0].price,
-      wxPayStatus:0
+      token:self.data.token,
+      orderId:order_id,
     };
-    var reward = (wx.getStorageSync('info').thirdApp.custom_rule.firstClass*self.data.payData.price)/100;
-    postData.payAfter = [];
-    if(wx.getStorageSync('info').behavior==1&&wx.getStorageSync('info').parent_no!=''){
-      postData.payAfter.push(
-        {
-          tableName:'FlowLog',
-          FuncName:'add',
-          data:{
-            count:reward,
-            trade_info:'代理消费奖励',
-            user_no:wx.getStorageSync('info').parent_no,
-            type:2,
-            thirdapp_id:getApp().globalData.thirdapp_id
-          }
-        }
-      );
+    if(self.data.submitData.passage1.length>0){
+      postData.price = self.data.mainData[self.data.chooseIndex].price*self.data.submitData.passage1.length;
+    }else{
+      postData.price = self.data.mainData[self.data.chooseIndex].price;
     };
+    
     const callback = (res)=>{
       wx.hideLoading();
       if(res.solely_code==100000){
@@ -312,7 +303,7 @@ Page({
         api.showToast('发起微信支付失败','fail')
       };
     };
-    api.pay(postData,callback);
+    api.directPay(postData,callback);
   },
  
   
