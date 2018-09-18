@@ -193,25 +193,42 @@ Page({
           buttonClicked: true
         });
         const postData = [];
-
-        for(var i=0;i<self.data.submitData.passage1.length;i++){
-          if(self.data.submitData.passage1[i]){
-            postData.push(
-              {
-                token:wx.getStorageSync('token'),
-                product:[
-                  {id:self.data.payData.id,count:1}
-                ],
-                pay:{wxPay:self.data.payData.price},
-                type:1,
-                data:{
-                  passage1:self.data.submitData.passage1[i],
-                  passage4:self.data.submitData.passage4 
+        if(self.data.submitData.passage1.length>0){
+          for(var i=0;i<self.data.submitData.passage1.length;i++){
+            if(self.data.submitData.passage1[i]){
+              postData.push(
+                {
+                  token:wx.getStorageSync('token'),
+                  product:[
+                    {id:self.data.payData.id,count:1}
+                  ],
+                  pay:{wxPay:self.data.payData.price},
+                  type:1,
+                  data:{
+                    passage1:self.data.submitData.passage1[i],
+                    passage4:self.data.submitData.passage4 
+                  }
                 }
-              }
-            )
+              );
+            };
           };
+        }else{
+          postData.push(
+            {
+              token:wx.getStorageSync('token'),
+              product:[
+                {id:self.data.payData.id,count:1}
+              ],
+              pay:{wxPay:self.data.payData.price},
+              type:1,
+              data:{
+                passage1:'',
+                passage4:self.data.submitData.passage4 
+              }
+            }
+          );
         };
+        
         console.log('postData',postData);
         const callback = (res)=>{
           if(res&&res.solely_code==100000){
